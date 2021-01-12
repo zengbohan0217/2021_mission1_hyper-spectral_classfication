@@ -14,10 +14,17 @@ DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 # DEVICE = torch.device("cpu")
 
 class CNN3Net_224(nn.Module):
-    def __init__(self):
+    def __init__(self, active_fc='PReLU'):
         super().__init__()
         self.conv3D = nn.Conv3d(1, 20, kernel_size=(24, 3, 3), padding=(0, 1, 1))
-        self.Act_F = nn.PReLU()
+        if active_fc == 'PReLU':
+            self.Act_F = nn.PReLU()
+        elif active_fc == 'CELU':
+            self.Act_F = nn.CELU()
+        elif active_fc == 'ELU':
+            self.Act_F = nn.ELU()
+        elif active_fc == 'SELU':
+            self.Act_F = nn.SELU()
         self.FC1 = nn.Sequential(nn.Linear(24020, 10000), nn.Dropout(p=0.5))
         self.FC2 = nn.Sequential(nn.Linear(10000, 15), nn.Dropout(p=0.5))
 
@@ -44,10 +51,17 @@ class CNN3Net_224(nn.Module):
         return output
 
 class CNN3Net_102(nn.Module):
-    def __init__(self):
+    def __init__(self, active_fc='PReLU'):
         super().__init__()
         self.conv3D = nn.Conv3d(1, 20, kernel_size=(24, 3, 3), padding=(0, 1, 1))
-        self.Act_F = nn.PReLU()
+        if active_fc == 'PReLU':
+            self.Act_F = nn.PReLU()
+        elif active_fc == 'CELU':
+            self.Act_F = nn.CELU()
+        elif active_fc == 'ELU':
+            self.Act_F = nn.ELU()
+        elif active_fc == 'SELU':
+            self.Act_F = nn.SELU()
         self.FC1 = nn.Sequential(nn.Linear(9360, 10000), nn.Dropout(p=0.5))
         self.FC2 = nn.Sequential(nn.Linear(10000, 15), nn.Dropout(p=0.5))
 
