@@ -1,6 +1,9 @@
 import CNN_FC_model as CNN_F
 import torch
 import numpy as np
+from tqdm import tqdm
+
+DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 class hyper_spectral():
     def __init__(self, input_pic):
@@ -22,6 +25,20 @@ class hyper_spectral():
                     out_put.append(c)
         out_put = np.array(out_put)
         return out_put
+
+    def part_classification(self, batch_size):
+        part_list = self.cut_off()
+        print(part_list.shape)
+        model = CNN_F.CNN3Net_224().to(DEVICE)
+        # model = CNN_F.CNN3Net_102().to(DEVICE)
+        out_list = []
+        for i in tqdm(range(0, len(part_list)+1, batch_size)):
+            c = torch.tensor(part_list[i:i+batch_size], dtype=torch.float32).to(DEVICE)
+            out = model(c)
+            out_list.append(out)
+        for out in out_list:
+            final_list = torch.cat((out))
+        return final_list
 
 
 
