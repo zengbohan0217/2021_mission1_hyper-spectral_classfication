@@ -47,7 +47,6 @@ class CNN3Net_224(nn.Module):
         output = F.relu(self.FC1(vec_to_FC))
         output = self.FC2(output)
         output = F.softmax(output, dim=1)
-        # print(output.size())
         return output
 
 class CNN3Net_102(nn.Module):
@@ -83,7 +82,6 @@ class CNN3Net_102(nn.Module):
         output = F.relu(self.FC1(vec_to_FC))
         output = self.FC2(output)
         output = F.softmax(output, dim=1)
-        # print(output.size())
         return output
 
 
