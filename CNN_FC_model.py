@@ -13,10 +13,24 @@ import numpy as np
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 # DEVICE = torch.device("cpu")
 
+class attention_FC(nn.Module):
+    def __init__(self, channel=224):
+        self.FC1 = nn.Sequential(nn.Linear(24020, 10000), nn.Dropout(p=0.5))
+        self.FC2 = nn.Sequential(nn.Linear(10000, 224), nn.Dropout(p=0.5))
+    def forward(self, x):
+        """
+        :param x: a tensor which size is n*224*3*3
+        :return: x with self-attention
+        """
+
+
 class CNN3Net_224(nn.Module):
-    def __init__(self, active_fc='PReLU'):
+    def __init__(self, active_fc='PReLU', pretrained=False, model_pth=None):
         super().__init__()
         self.conv3D = nn.Conv3d(1, 20, kernel_size=(24, 3, 3), padding=(0, 1, 1))
+        if pretrained and model_pth != None:
+            model_pre = torch.load(model_pth, map_location='cuda')
+            self.conv3D.load_state_dict(model_pre)
         if active_fc == 'PReLU':
             self.Act_F = nn.PReLU()
         elif active_fc == 'CELU':
@@ -50,9 +64,12 @@ class CNN3Net_224(nn.Module):
         return output
 
 class CNN3Net_102(nn.Module):
-    def __init__(self, active_fc='PReLU'):
+    def __init__(self, active_fc='PReLU', pretrained=False, model_pth=None):
         super().__init__()
         self.conv3D = nn.Conv3d(1, 20, kernel_size=(24, 3, 3), padding=(0, 1, 1))
+        if pretrained and model_pth != None:
+            model_pre = torch.load(model_pth, map_location='cuda')
+            self.conv3D.load_state_dict(model_pre)
         if active_fc == 'PReLU':
             self.Act_F = nn.PReLU()
         elif active_fc == 'CELU':
