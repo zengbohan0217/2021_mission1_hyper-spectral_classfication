@@ -28,6 +28,10 @@ class hyper_spectral():
         return out_put
 
     def part_classification(self, batch_size):
+        """
+        :param batch_size: put how much data into the model one turn
+        :return: a tensor with 2 dim to represent the result of each part
+        """
         part_list = self.cut_off()
         print(part_list.shape)
         model = CNN_F.CNN3Net_224().to(DEVICE)
