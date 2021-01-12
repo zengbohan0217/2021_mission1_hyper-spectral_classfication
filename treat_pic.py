@@ -3,7 +3,8 @@ import torch
 import numpy as np
 from tqdm import tqdm
 
-DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+# DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+DEVICE = torch.device("cpu")
 
 class hyper_spectral():
     def __init__(self, input_pic):
@@ -33,11 +34,13 @@ class hyper_spectral():
         # model = CNN_F.CNN3Net_102().to(DEVICE)
         out_list = []
         for i in tqdm(range(0, len(part_list)+1, batch_size)):
-            c = torch.tensor(part_list[i:i+batch_size], dtype=torch.float32).to(DEVICE)
-            out = model(c)
-            out_list.append(out)
+            if i+batch_size < len(part_list)+1:
+                c = torch.tensor(part_list[i:i+batch_size], dtype=torch.float32).to(DEVICE)
+                out = model(c)
+                out_list.append(out)
+        final_list = out_list.pop(0)
         for out in out_list:
-            final_list = torch.cat((out))
+            final_list = torch.cat((final_list, out))
         return final_list
 
 

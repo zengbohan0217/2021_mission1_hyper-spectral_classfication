@@ -11,6 +11,7 @@ import torchvision.utils
 import numpy as np
 
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+# DEVICE = torch.device("cpu")
 
 class CNN3Net_224(nn.Module):
     def __init__(self):
