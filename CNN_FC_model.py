@@ -15,9 +15,9 @@ DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 class CNN3Net_224(nn.Module):
     def __init__(self):
         super().__init__()
-        self.conv3D = nn.Conv3d(1, 20, kernel_size=(24, 3, 3))
+        self.conv3D = nn.Conv3d(1, 20, kernel_size=(24, 3, 3), padding=(0, 1, 1))
         self.Act_F = nn.PReLU()
-        self.FC1 = nn.Sequential(nn.Linear(73660, 10000), nn.Dropout(p=0.5))
+        self.FC1 = nn.Sequential(nn.Linear(24020, 10000), nn.Dropout(p=0.5))
         self.FC2 = nn.Sequential(nn.Linear(10000, 15), nn.Dropout(p=0.5))
 
     def forward(self, x):
@@ -26,9 +26,10 @@ class CNN3Net_224(nn.Module):
         x = F.interpolate(x, scale_factor=2, mode='nearest') # reshape 3*3 into 6*6
         x = x.view(-1, 1, 224, 6, 6)
         conv_res = self.conv3D(x)
-        pool1 = F.max_pool3d(conv_res, 1)
-        pool2 = F.max_pool3d(conv_res, 2)
-        pool3 = F.max_pool3d(conv_res, 3)
+        # print(conv_res.size())
+        pool1 = F.max_pool3d(conv_res, 6)
+        pool2 = F.max_pool3d(conv_res, 3)
+        pool3 = F.max_pool3d(conv_res, 2)
         pool1 = pool1.view(b_size, -1)
         pool2 = pool2.view(b_size, -1)
         pool3 = pool3.view(b_size, -1)
@@ -44,9 +45,9 @@ class CNN3Net_224(nn.Module):
 class CNN3Net_102(nn.Module):
     def __init__(self):
         super().__init__()
-        self.conv3D = nn.Conv3d(1, 20, kernel_size=(24, 3, 3))
+        self.conv3D = nn.Conv3d(1, 20, kernel_size=(24, 3, 3), padding=(0, 1, 1))
         self.Act_F = nn.PReLU()
-        self.FC1 = nn.Sequential(nn.Linear(28920, 10000), nn.Dropout(p=0.5))
+        self.FC1 = nn.Sequential(nn.Linear(9360, 10000), nn.Dropout(p=0.5))
         self.FC2 = nn.Sequential(nn.Linear(10000, 15), nn.Dropout(p=0.5))
 
     def forward(self, x):
@@ -55,9 +56,9 @@ class CNN3Net_102(nn.Module):
         x = F.interpolate(x, scale_factor=2, mode='nearest') # reshape 3*3 into 6*6
         x = x.view(-1, 1, 102, 6, 6)
         conv_res = self.conv3D(x)
-        pool1 = F.max_pool3d(conv_res, 1)
-        pool2 = F.max_pool3d(conv_res, 2)
-        pool3 = F.max_pool3d(conv_res, 3)
+        pool1 = F.max_pool3d(conv_res, 6)
+        pool2 = F.max_pool3d(conv_res, 3)
+        pool3 = F.max_pool3d(conv_res, 2)
         pool1 = pool1.view(b_size, -1)
         pool2 = pool2.view(b_size, -1)
         pool3 = pool3.view(b_size, -1)
