@@ -81,6 +81,7 @@ class CNN3Net_224(nn.Module):
         super().__init__()
         self.attention_conv = attention_FC224()
         self.conv3D = nn.Conv3d(1, 20, kernel_size=(24, 3, 3), padding=(0, 1, 1))
+        self.bn = nn.BatchNorm3d(20)
         if pretrained and model_pth != None:
             model_pre = torch.load(model_pth, map_location='cuda')
             self.conv3D.load_state_dict(model_pre)
@@ -102,6 +103,7 @@ class CNN3Net_224(nn.Module):
         x = F.interpolate(x, scale_factor=2, mode='nearest') # reshape 3*3 into 6*6
         x = x.view(-1, 1, 74, 6, 6)
         conv_res = self.conv3D(x)
+        conv_res = self.bn(conv_res)
         # print(conv_res.size())
         pool1 = F.max_pool3d(conv_res, 6)
         pool2 = F.max_pool3d(conv_res, 3)
@@ -122,6 +124,7 @@ class CNN3Net_102(nn.Module):
         super().__init__()
         self.attention_conv = attention_FC102()
         self.conv3D = nn.Conv3d(1, 20, kernel_size=(24, 3, 3), padding=(0, 1, 1))
+        self.bn = nn.BatchNorm3d(20)
         if pretrained and model_pth != None:
             model_pre = torch.load(model_pth, map_location='cuda')
             self.conv3D.load_state_dict(model_pre)
@@ -143,6 +146,7 @@ class CNN3Net_102(nn.Module):
         x = F.interpolate(x, scale_factor=2, mode='nearest') # reshape 3*3 into 6*6
         x = x.view(-1, 1, 34, 6, 6)
         conv_res = self.conv3D(x)
+        conv_res = self.bn(conv_res)
         pool1 = F.max_pool3d(conv_res, 6)
         pool2 = F.max_pool3d(conv_res, 3)
         pool3 = F.max_pool3d(conv_res, 2)
@@ -162,6 +166,7 @@ class CNN3Net_200(nn.Module):
         super().__init__()
         self.attention_conv = attention_FC200()
         self.conv3D = nn.Conv3d(1, 20, kernel_size=(24, 3, 3), padding=(0, 1, 1))
+        self.bn = nn.BatchNorm3d(20)
         if pretrained and model_pth != None:
             model_pre = torch.load(model_pth, map_location='cuda')
             self.conv3D.load_state_dict(model_pre)
@@ -183,6 +188,7 @@ class CNN3Net_200(nn.Module):
         x = F.interpolate(x, scale_factor=2, mode='nearest') # reshape 3*3 into 6*6
         x = x.view(-1, 1, 66, 6, 6)
         conv_res = self.conv3D(x)
+        conv_res = self.bn(conv_res)
         # print(conv_res.size())
         pool1 = F.max_pool3d(conv_res, 6)
         pool2 = F.max_pool3d(conv_res, 3)
