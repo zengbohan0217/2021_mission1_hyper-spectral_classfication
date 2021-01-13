@@ -35,6 +35,8 @@ class Indiapine_dataset(Dataset):
             y_pos -= 1
         data = self.input_array[0:201, x_pos-1:x_pos+2, y_pos-1:y_pos+2]
         label = self.input_label[x_pos, y_pos]
+        data = data.astype(np.float32)
+        label = int(label)
         return data, label
 
     def __len__(self):

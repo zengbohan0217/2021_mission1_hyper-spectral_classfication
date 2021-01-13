@@ -8,7 +8,7 @@ from tqdm import tqdm
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 EPOCH = 30
 
-model = model_set.CNN3Net_200()
+model = model_set.CNN3Net_200().to(DEVICE)
 optimizer = torch.optim.SGD(model.parameters(), lr=0.0005, momentum=0.9)
 
 train_set = d_set.Indiapine_dataset()

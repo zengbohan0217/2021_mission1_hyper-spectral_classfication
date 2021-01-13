@@ -174,7 +174,7 @@ class CNN3Net_200(nn.Module):
         elif active_fc == 'SELU':
             self.Act_F = nn.SELU()
         self.FC1 = nn.Sequential(nn.Linear(5040, 1000), nn.Dropout(p=0.5))
-        self.FC2 = nn.Sequential(nn.Linear(1000, 15), nn.Dropout(p=0.5))
+        self.FC2 = nn.Sequential(nn.Linear(1000, 17), nn.Dropout(p=0.5))
 
     def forward(self, x):
         # input shape is batch_size * 224 * 3 * 3
