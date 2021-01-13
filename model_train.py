@@ -4,12 +4,13 @@ from torch.utils.data import DataLoader, Dataset
 import torch
 import torch.nn.functional as F
 from tqdm import tqdm
+import numpy as np
 
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 EPOCH = 50
 
-# model = model_set.CNN3Net_200().to(DEVICE)
-model = model_set.Orin_CNN3Net_200().to(DEVICE)
+model = model_set.CNN3Net_200().to(DEVICE)
+# model = model_set.Orin_CNN3Net_200().to(DEVICE)
 optimizer = torch.optim.SGD(model.parameters(), lr=0.0005, momentum=0.9)
 
 train_set = d_set.Indiapine_dataset(length=3200)
@@ -24,7 +25,11 @@ def train(model, device, train_loader, optimizer, epoch):
         data, target = data.to(device), target.to(device)
         optimizer.zero_grad()
         output = model(data)
-        loss = F.nll_loss(output, target)
+
+        # loss = F.nll_loss(output, target)
+        criterion = torch.nn.CrossEntropyLoss()
+        loss = criterion(output, target)
+
         loss.backward()
         pred = output.max(1, keepdim=True)[1]  # 找到概率最大的下标
         correct += pred.eq(target.view_as(pred)).sum().item()
